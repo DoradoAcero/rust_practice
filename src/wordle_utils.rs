@@ -33,7 +33,7 @@ pub struct GameState<'a> {
     pub(crate) letter_matches: HashMap<char, Letter>
 }
 
-pub fn initalize_game_state<'a>(game_state: &'a mut GameState<'a>) -> &mut GameState<'a> {
+pub fn initalize_game_state(game_state: &mut GameState) {
     for i in 97u8..=122 {
         game_state.letter_matches.insert(i as char, Letter{
             status: LetterStatus::Unknown,
@@ -41,11 +41,9 @@ pub fn initalize_game_state<'a>(game_state: &'a mut GameState<'a>) -> &mut GameS
             false_positions: None,
         });
     };
-    
-    game_state
 }
 
-pub fn wordle_compare<'a>(game_state: &'a mut GameState<'a>, guess: &'a str) -> &'a mut GameState<'a> {
+pub fn wordle_compare(game_state: & mut GameState, guess: & str) {
     let target_chars: Vec<char> = game_state.target_word.chars().collect();
     let guess_chars: Vec<char> = guess.chars().collect();
     for (i, letter) in guess_chars.iter().enumerate(){
@@ -78,6 +76,4 @@ pub fn wordle_compare<'a>(game_state: &'a mut GameState<'a>, guess: &'a str) -> 
             }
         };
     };
-
-    game_state
 }
