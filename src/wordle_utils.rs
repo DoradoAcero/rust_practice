@@ -1,5 +1,5 @@
 use core::fmt;
-use std::{collections::HashMap, fmt::Display, iter::Enumerate};
+use std::{collections::HashMap, fmt::Display};
 
 
 pub enum LetterStatus {

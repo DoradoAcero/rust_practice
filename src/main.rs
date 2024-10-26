@@ -1,4 +1,4 @@
-use std::{collections::{btree_map::Range, HashMap}, fs};
+use std::{collections::HashMap, fs};
 
 mod wordle_utils;
 
@@ -22,20 +22,18 @@ fn main() {
     let mut game_state = initalize_game_state(&mut game_state);
 
     println!("target: {}", target_word);
-    for i in 0..5 {
-        let guess = words[rand::random::<usize>() % words.len()];
-        println!("guess: {}", guess);
+    let guess = words[rand::random::<usize>() % words.len()];
+    println!("guess: {}", guess);
 
-        let mut game_state = wordle_compare(&mut game_state, guess);
+    let game_state = wordle_compare(&mut game_state, guess);
 
-        for (chr, letter) in game_state.letter_matches.iter() {
-            match letter.status {
-                LetterStatus::Unknown => {
-                    continue;
-                }
-                _ => {
-                    println!("{}: {}", chr, letter.status)
-                }
+    for (chr, letter) in game_state.letter_matches.iter() {
+        match letter.status {
+            LetterStatus::Unknown => {
+                continue;
+            }
+            _ => {
+                println!("{}: {}", chr, letter.status)
             }
         }
     }
