@@ -28,7 +28,7 @@ pub struct Letter {
 }
 
 pub struct GameState<'a> {
-    pub(crate) target_word: &'a str,
+    pub(crate) target_word: &'a String,
     pub(crate) letter_matches: HashMap<char, Letter>
 }
 
@@ -42,7 +42,7 @@ pub fn initalize_game_state(game_state: &mut GameState) {
     };
 }
 
-pub fn wordle_compare(game_state: & mut GameState, guess: & str) {
+pub fn wordle_compare(game_state: & mut GameState, guess: &String) {
     let target_chars: Vec<char> = game_state.target_word.chars().collect();
     let guess_chars: Vec<char> = guess.chars().collect();
     for (i, letter) in guess_chars.iter().enumerate(){
@@ -91,8 +91,8 @@ macro_rules! unwrap_or_continue {
     };
 }
 
-pub fn get_possible_words<'a>(game_state: &GameState, possible_words: Vec<&'a str>) -> Vec<&'a str> {
-    let mut return_words  = vec![];
+pub fn get_possible_words<'a>(game_state: &GameState, possible_words: Vec<String>) -> Vec<String> {
+    let mut return_words: Vec<String>  = vec![];
     let mut must_haves = vec![];
 
     for i in 97u8..=122{
@@ -128,7 +128,7 @@ pub fn get_possible_words<'a>(game_state: &GameState, possible_words: Vec<&'a st
         };
         if flag {continue}
         else {
-            return_words.insert(0, *word);
+            return_words.insert(0, word.clone());
         }
     }
 
@@ -138,12 +138,12 @@ pub fn get_possible_words<'a>(game_state: &GameState, possible_words: Vec<&'a st
             match letter.status {
                 LetterStatus::LetterMatch => {
                     if !(word.chars().nth(letter.known_position.unwrap() as usize).unwrap() == chr) {
-                        to_remove.insert(0, *word);
+                        to_remove.insert(0, word.clone());
                     }
                 },
                 LetterStatus::WordMatch => {
                     if !word.contains(chr) {
-                        to_remove.insert(0, *word);
+                        to_remove.insert(0, word.clone());
                         continue;
                     }
                 }
@@ -153,7 +153,7 @@ pub fn get_possible_words<'a>(game_state: &GameState, possible_words: Vec<&'a st
         }
     }
     for word in to_remove{
-        return_words.retain(|&x| x != word);
+        return_words.retain(|x| *x != *word);
     }
 
     return_words
