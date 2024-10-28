@@ -2,9 +2,10 @@ use std::{collections::HashMap, fs};
 
 mod wordle_utils;
 
-use wordle_utils::{initalize_game_state, wordle_compare, GameState, LetterStatus};
+use wordle_utils::{get_possible_words, initalize_game_state, wordle_compare, GameState, LetterStatus};
 
-fn main() {
+
+fn run_basic_strat() -> i32 {
     let file_path = "words.txt";
 
     let contents = fs::read_to_string(file_path)
@@ -22,20 +23,33 @@ fn main() {
     initalize_game_state(&mut game_state);
 
     println!("target: {}", target_word);
-    let guess = words[rand::random::<usize>() % words.len()];
-    println!("guess: {}", guess);
+    let mut possible_words = words;
 
-    wordle_compare(&mut game_state, guess);
+    let mut count = 0;
+    loop {
+        count += 1;
+        let guess = possible_words.remove(rand::random::<usize>() % possible_words.len());
+        println!("guess: {}", guess);
 
-    for (chr, letter) in game_state.letter_matches.iter() {
-        match letter.status {
-            LetterStatus::Unknown => {
-                continue;
-            }
-            _ => {
-                println!("{}: {}", chr, letter.status)
-            }
+        wordle_compare(&mut game_state, guess);
+
+        if guess == target_word{
+            println!("FOUND");
+            break;
         }
-    }
+        possible_words = get_possible_words(&game_state, possible_words);
+    };
     
+    count
+}
+
+fn main() {
+    let mut counts = vec![];
+    for _ in 0..100 {
+        counts.insert(0, run_basic_strat());
+    };
+
+    let sum: i32 = counts.iter().sum();
+    let average = sum as f64 / counts.len() as f64;
+    println!("Average guess count: {}", average);
 }
