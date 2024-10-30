@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Display};
+use std::{cmp, collections::HashMap, fmt::Display, hash::Hash};
 
 
 pub enum LetterStatus {
@@ -157,4 +157,37 @@ pub fn get_possible_words<'a>(game_state: &GameState, possible_words: Vec<&'a st
     }
 
     return_words
+}
+
+
+pub fn get_next_word<'a>(game_state: &mut GameState, possible_words: &Vec<&'a str>) -> &'a str {
+    // 1. Get the frequency of letters in the possible words
+    let mut letter_freq = HashMap::new();
+    for word in possible_words {
+        for chr in word.chars() {
+            match letter_freq.get_mut(&chr) {
+                Some(freq) => *freq += 1,
+                None => {letter_freq.insert(chr, 1); ()}
+            }
+        }
+    };
+
+    // 2. score the words based on the character frequency they have
+    let mut word_scores = HashMap::new();
+    for (chr, freq) in letter_freq.iter_mut() {
+        match game_state.letter_matches.get(chr).unwrap().status {
+            LetterStatus::Unknown => (),
+            _ => *freq = 0
+        }
+    }
+    
+    for word in possible_words {
+        word_scores.insert(word, 0);
+        for chr in word.chars() {
+            // sum the word based on letter freq
+            *word_scores.get_mut(&word).unwrap() += letter_freq.get(&chr).unwrap_or(&0);
+        }
+    };
+
+    *word_scores.iter().max_by(|a, b| a.1.cmp(b.1)).unwrap().0
 }

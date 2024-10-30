@@ -8,7 +8,6 @@ most people when they find a letter than matches will only try words with that l
 I think this is inefficient as our objective should be to narrow down the scope of what words are possible
 not confirm letters that we know for sure.
 
-
 ## Plan(in scope)
 1. Choose a word from a list of words
 2. character wise comparison and feedback of chosen word vs guessed word
@@ -19,3 +18,18 @@ not confirm letters that we know for sure.
     you might be able to get away with a loss function where every letter match is -n, word match -m, and no match is 0)
 2. TUI to play yourself, with toggleable AI/algo help
 3. create and compare a bunch of these algorithims
+
+
+## Results
+I completed what I had planned, and my strat was by far the worst
+
+------------------------------------------------------------
+Average guess count: 5.083 #Basic strat
+------------------------------------------------------------
+Average guess count: 4.553 #Stake, then count, the basic
+------------------------------------------------------------
+Average guess count: 5.713 #Custom strat
+------------------------------------------------------------
+
+I had chatgpt implement a basic parrallelizing method in another branch
+I would like to give that a shot myself
