@@ -72,7 +72,8 @@ pub fn stake_first_strat(words: Vec<&str>) -> i32 {
     count
 }
 
-pub fn my_strat(words: Vec<&str>, possible_threshold: usize) -> i32 {
+pub fn my_strat(words: Vec<&str>) -> i32 {
+    let possible_threshold = 7;
     let target_word = words[rand::random::<usize>() % words.len()];
 
     // println!("{}", target_word);
