@@ -1,4 +1,4 @@
-use std::{collections::HashMap, ops::Index};
+use std::collections::HashMap;
 
 use wordle_utils::{get_possible_words, initalize_game_state, wordle_compare, GameState};
 
@@ -72,8 +72,10 @@ pub fn stake_first_strat(words: Vec<&str>) -> i32 {
     count
 }
 
-pub fn my_strat(words: Vec<&str>) -> i32 {
+pub fn my_strat(words: Vec<&str>, possible_threshold: usize) -> i32 {
     let target_word = words[rand::random::<usize>() % words.len()];
+
+    // println!("{}", target_word);
 
     let mut game_state = GameState {
         target_word,
@@ -82,9 +84,7 @@ pub fn my_strat(words: Vec<&str>) -> i32 {
     
     initalize_game_state(&mut game_state);
 
-    // wordle_compare(&mut game_state, "stake");
-    
-    let mut possible_words = words;
+    let mut possible_words = words.clone();
 
     let mut count = 0;
     loop {
@@ -92,18 +92,21 @@ pub fn my_strat(words: Vec<&str>) -> i32 {
         count += 1;
 
         // I love rust
-        let guess = if possible_words.len() > 1 {
-            get_next_word(&mut game_state, &possible_words)
+        let guess = if possible_words.len() > possible_threshold {
+            get_next_word(&mut game_state, &words)
         } else {
             // there is only one option, must be the correct word
             // println!("guess: {} target: {}", possible_words[0], target_word);
-            possible_words[0]
+            possible_words.remove(rand::random::<usize>() % possible_words.len())
         };
         
         // println!("guess: {}", guess);
         // remove the guess from the possible words
-        let index = possible_words.iter().position(|x| *x == guess).unwrap();
-        possible_words.remove(index);
+        let index = possible_words.iter().position(|x| *x == guess);
+        match index {
+            Some(i) => {possible_words.remove(i);},
+            None => ()
+        };
 
         wordle_compare(&mut game_state, guess);
 

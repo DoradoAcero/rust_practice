@@ -26,7 +26,7 @@ I completed what I had planned, and my strat was by far the worst
 ------------------------------------------------------------
 Average guess count: 5.083 #Basic strat
 ------------------------------------------------------------
-Average guess count: 4.553 #Stake, then count, the basic
+Average guess count: 4.553 #Stake, then count, then basic
 ------------------------------------------------------------
 Average guess count: 5.713 #Custom strat
 ------------------------------------------------------------
