@@ -1,4 +1,5 @@
 use std::{collections::HashMap, fs, sync::{Arc, Mutex}, thread};
+use std::time::Instant;
 
 mod wordle_utils;
 
@@ -15,19 +16,19 @@ fn run_basic_strat(words: Vec<String>) -> i32 {
     
     initalize_game_state(&mut game_state);
 
-    println!("target: {}", target_word);
+    // println!("target: {}", target_word);
     let mut possible_words = words.clone(); // This should just be a bunch of pointers, it should be fine to clone
 
     let mut count = 0;
     loop {
         count += 1;
         let guess = &possible_words.remove(rand::random::<usize>() % possible_words.len());
-        println!("guess: {}", guess);
+        // println!("guess: {}", guess);
 
         wordle_compare(&mut game_state, guess);
 
         if guess == target_word{ // TODO look into if comparing references works here(with all this cloneing just to try parralellism, I don't really trust it)
-            println!("FOUND");
+            // println!("FOUND");
             break;
         }
         possible_words = get_possible_words(&game_state, possible_words);
@@ -37,6 +38,7 @@ fn run_basic_strat(words: Vec<String>) -> i32 {
 }
 
 fn main() {
+    let now = Instant::now();
     let file_path = "words.txt";
 
     let contents = fs::read_to_string(file_path)
@@ -49,7 +51,7 @@ fn main() {
     let mut handles = vec![];
 
     // Spawn 100 threads
-    for _ in 0..100 {
+    for _ in 0..1000 {
         let words_clone = words.clone();
         let counts_clone = Arc::clone(&counts); // Clone Arc to share the counts
 
@@ -75,4 +77,6 @@ fn main() {
     let average = sum as f64 / counts.len() as f64;
 
     println!("Average: {}", average);
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
 }
