@@ -33,3 +33,14 @@ Average guess count: 5.713 #Custom strat
 
 I had chatgpt implement a basic parrallelizing method in another branch
 I would like to give that a shot myself
+
+------------------------------------------------------------
+Average guess count: 5.0476, Time Taken: 27.32s 2.73ms/iter
+------------------------------------------------------------
+Average guess count: 4.5954, Time Taken: 2.65s 265.18µs/iter
+------------------------------------------------------------
+Average guess count: 4.5546, Time Taken: 38.24s 3.82ms/iter
+------------------------------------------------------------
+
+After multithreading them, they are quite a bit faster to run through, I have really just done a first pass on multithreading though
+Not sure how much more I want to perfect/understand it quite yet
