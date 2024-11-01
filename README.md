@@ -21,7 +21,7 @@ not confirm letters that we know for sure.
 
 
 ## Results
-I completed what I had planned, and my strat was by far the worst
+I completed what I had planned, and my strat was by far the worst(when I programmed it wrong)
 
 ------------------------------------------------------------
 Average guess count: 5.083 #Basic strat
@@ -44,3 +44,18 @@ Average guess count: 4.5546, Time Taken: 38.24s 3.82ms/iter
 
 After multithreading them, they are quite a bit faster to run through, I have really just done a first pass on multithreading though
 Not sure how much more I want to perfect/understand it quite yet
+
+
+Ok, we got multithreading working well, enough
+time to move onto one of the three options I had for later down the line or move onto something else
+I might have a look at more wordle strats. Look on the internet and try to implement them.
+If I go with option 1. I want to use something with a ML lean aka not Rust, Something like mojo.
+I could look into a tui, but im not feeling motivated to do that atm, idk why.
+
+So lets find/make some algorithims.
+https://www.poirrier.ca/notes/wordle-optimal/
+They say with a decision tree based algo, you can solve the 12972 word dict with 4.077 guesses on average, I am running a ~9000 word dict, with a average of about 4.5
+All of these appear to be a decision tree construction, something I kinda want to do in mojo.
+
+One thing they talk about in comments following the strats are positioning of the words limiting the search space further down the line and why one permutation of a set of letters is superioir to another
+I want to try and build in the position of the letters into the heuristic, somehow.
