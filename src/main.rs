@@ -3,20 +3,21 @@ mod wordle_utils;
 
 use std::{fs, sync::{Arc, Mutex}, thread, time::Instant};
 
-use strats::{my_strat, run_basic_strat, stake_first_strat};
+use strats::{my_strat, my_strat_with_position, run_basic_strat, stake_first_strat};
 
 
 fn main() {
-    let iter_count = 10000;
+    let iter_count = 3000;
     static FILE_PATH: &str = "words.txt";
 
     let contents = fs::read_to_string(FILE_PATH)
         .expect("Should have been able to read the file");
     let words: Arc<Vec<String>> = Arc::new(contents.lines().map(|line| line.to_string()).collect());
     
-    let strats_functions = vec![run_basic_strat, stake_first_strat, my_strat];
+    let strats_functions = vec![run_basic_strat, stake_first_strat, my_strat, my_strat_with_position];
 
     // there is the possibility of some sick meta programming here, but ill park that for now
+    println!("------------------------------------------------------------");
     for strat_function in strats_functions {
         let start = Instant::now();
         let counts = Arc::new(Mutex::new(vec![]));

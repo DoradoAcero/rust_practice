@@ -195,3 +195,48 @@ pub fn get_next_word<'a>(game_state: &mut GameState, all_words: &'a Vec<String>)
 
     *word_scores.iter().max_by(|a, b| a.1.cmp(b.1)).unwrap().0
 }
+
+pub fn get_next_word_with_position<'a>(game_state: &mut GameState, all_words: &'a Vec<String>) -> &'a String {
+    // 1. Get the frequency of letters in the possible words
+    let mut letter_freq: HashMap<char, (i32, [i32; 5])> = HashMap::new();
+    for word in all_words {
+        for (i, chr) in word.chars().enumerate() {
+            match letter_freq.get_mut(&chr) {
+                Some(freq) => {
+                    (*freq).0 += 1;
+                    (*freq).1[i] += 1;
+                },
+                None => {
+                    let mut position_chart = [0,0,0,0,0]; 
+                    position_chart[i] = 1;
+                    letter_freq.insert(chr, (1, position_chart));
+                    ()
+                }
+            }
+        }
+    };
+
+    // 2. score the words based on the character frequency they have
+    let mut word_scores = HashMap::new();
+    for (chr, freq) in letter_freq.iter_mut() {
+        match game_state.letter_matches.get(chr).unwrap().status {
+            LetterStatus::Unknown => (),
+            _ => (*freq).0 = 0
+        }
+    }
+    
+    for word in all_words {
+        word_scores.insert(word, 0);
+        let mut existing = vec![];
+        for (i, chr) in word.chars().enumerate() {
+            // sum the word based on letter freq
+            if !existing.contains(&chr) {
+                let freq = letter_freq.get(&chr).unwrap_or(&(0, [0,0,0,0,0]));
+                *word_scores.get_mut(&word).unwrap() += freq.0 * (freq.1[i] as f64).log(2.0) as i32; // log 2 is the most based ;)
+                existing.insert(0, chr);
+            };
+        }
+    };
+
+    *word_scores.iter().max_by(|a, b| a.1.cmp(b.1)).unwrap().0
+}

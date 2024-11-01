@@ -57,5 +57,30 @@ https://www.poirrier.ca/notes/wordle-optimal/
 They say with a decision tree based algo, you can solve the 12972 word dict with 4.077 guesses on average, I am running a ~9000 word dict, with a average of about 4.5
 All of these appear to be a decision tree construction, something I kinda want to do in mojo.
 
-One thing they talk about in comments following the strats are positioning of the words limiting the search space further down the line and why one permutation of a set of letters is superioir to another
+One thing they talk about in comments following the strats are positioning of the chrs in the words limiting the search space further down the line and why one permutation of a set of letters is superior to another
 I want to try and build in the position of the letters into the heuristic, somehow.
+
+------------------------------------------------------------
+Average guess count: 5.0982, Time Taken: 28.68s 2.87ms/iter
+------------------------------------------------------------
+Average guess count: 4.5731, Time Taken: 3.40s 340.42µs/iter
+------------------------------------------------------------
+Average guess count: 4.5502, Time Taken: 99.14s 9.91ms/iter
+------------------------------------------------------------
+Average guess count: 4.4103, Time Taken: 153.77s 15.38ms/iter
+------------------------------------------------------------
+
+it worked, but by golly it is slow
+it makes sense though, im looping through way too much.
+added a log term to the position to slightly deincentivize it, ill increase the log term to do this more, see if it helps at all
+log 2 seems to be the most based
+
+------------------------------------------------------------
+Average guess count: 5.078, Time Taken: 8.83s 2.94ms/iter
+------------------------------------------------------------
+Average guess count: 4.595666666666666, Time Taken: 846.73ms 282.24µs/iter
+------------------------------------------------------------
+Average guess count: 4.544, Time Taken: 8.14s 2.71ms/iter
+------------------------------------------------------------
+Average guess count: 4.369, Time Taken: 8.23s 2.74ms/iter
+------------------------------------------------------------
