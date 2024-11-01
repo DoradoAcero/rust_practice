@@ -1,7 +1,7 @@
 mod strats;
 mod wordle_utils;
 
-use std::{fs, sync::{Arc, LazyLock, Mutex}, thread, time::Instant};
+use std::{fs, sync::{Arc, Mutex}, thread, time::Instant};
 
 use strats::{my_strat, run_basic_strat, stake_first_strat};
 
@@ -10,8 +10,9 @@ fn main() {
     let iter_count = 10000;
     static FILE_PATH: &str = "words.txt";
 
-    static CONTENTS: LazyLock<String> = std::sync::LazyLock::new(|| {fs::read_to_string(FILE_PATH)
-        .expect("Should have been able to read the file")});
+    let contents = fs::read_to_string(FILE_PATH)
+        .expect("Should have been able to read the file");
+    let words: Arc<Vec<String>> = Arc::new(contents.lines().map(|line| line.to_string()).collect());
     
     let strats_functions = vec![run_basic_strat, stake_first_strat, my_strat];
 
@@ -22,7 +23,7 @@ fn main() {
         let mut handles = vec![];
         for _ in 0..iter_count {
             let counts = Arc::clone(&counts);
-            let words = CONTENTS.lines().collect(); // I don't really like this as it will reload the file over and over again
+            let words = Arc::clone(&words);
             let handle = thread::spawn(move || { // this is how I see it in the docs, and how chatgpt did it, lets see if this changes anything, it shouldn't though
                 
                 // My theory, this waits for the function inside to finish, locking up all the other threads
@@ -30,7 +31,7 @@ fn main() {
 
                 // counts.lock().unwrap().insert(0, strat_function(words)); // SLOW
 
-                let result = strat_function(words); // FAST
+                let result = strat_function(words.to_vec()); // FAST
                 counts.lock().unwrap().push(result); 
             });
 
