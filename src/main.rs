@@ -7,7 +7,7 @@ use strats::{my_strat, my_strat_with_position, run_basic_strat, stake_first_stra
 
 
 fn main() {
-    let iter_count = 3000;
+    let iter_count = 10000;
     static FILE_PATH: &str = "words.txt";
 
     let contents = fs::read_to_string(FILE_PATH)

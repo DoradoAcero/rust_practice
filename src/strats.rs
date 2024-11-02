@@ -84,10 +84,11 @@ pub fn my_strat(words: Vec<String>) -> i32 {
     };
     
     initalize_game_state(&mut game_state);
+    wordle_compare(&mut game_state, &"arose".to_string()); // this is a predictable word, speeds up runtime considerably
 
     let mut possible_words = words.clone();
 
-    let mut count = 0;
+    let mut count = 1;
     loop {
         possible_words = get_possible_words(&game_state, &possible_words);
         count += 1;
@@ -132,10 +133,11 @@ pub fn my_strat_with_position(words: Vec<String>) -> i32 {
     };
     
     initalize_game_state(&mut game_state);
+    wordle_compare(&mut game_state, &"soane".to_string()); // this is a predictable word, speeds up runtime considerably
 
     let mut possible_words = words.clone();
 
-    let mut count = 0;
+    let mut count = 1;
     loop {
         possible_words = get_possible_words(&game_state, &possible_words);
         count += 1;
@@ -145,7 +147,6 @@ pub fn my_strat_with_position(words: Vec<String>) -> i32 {
             get_next_word_with_position(&mut game_state, &words)
         } else {
             // there is only one option, must be the correct word
-            // println!("guess: {} target: {}", possible_words[0], target_word);
             &possible_words.remove(rand::random::<usize>() % possible_words.len())
         };
         
